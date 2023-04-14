@@ -8,11 +8,11 @@
         </div>
         <div class="container">
             <div class="form-box">
-                <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="任务名称">
-                        <el-input v-model="form.taskName"></el-input>
+                <el-form ref="form" :rules="editFormRules" :model="form" label-width="80px" >
+                    <el-form-item label="任务名称" prop="taskName">
+                        <el-input auto-complete="off" v-model="form.taskName"></el-input>
                     </el-form-item>
-                    <el-form-item label="资产列表">
+                    <el-form-item label="资产列表" prop="asset">
                         <el-input type="textarea" ref="assetRef" rows="5" v-model="form.asset" placeholder="逐行输入扫描目标地址" @blur.prevent="formatCont()"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -21,8 +21,9 @@
                         <el-button size="small" @click="submitFile">上传</el-button>
                       </el-upload>
                     </el-form-item>
-                    <el-form-item label="Headers">
-                      <el-input type="textarea" rows="5" v-model="form.headers" placeholder="逐行输入自定义Headers"></el-input>
+                    <el-form-item label="Headers" prop="headers">
+                      <el-input type="textarea" rows="5" v-model="form.headers" placeholder="逐行输入自定义Headers
+示例 Cookie: KEY_1=VALUE_1; KEY_2=VALUE_2"></el-input>
                     </el-form-item>
                     <el-row>
                       <el-col :span="8">
@@ -73,7 +74,7 @@
                           </el-form-item>
                         </el-col>                        
                     </el-row>
-                    <el-form-item label="模式选择">
+                    <el-form-item label="模式选择" prop="pattern">
                         <el-select v-model="form.pattern" placeholder="请选择扫描模式">
                             <el-option key="主动模式" label="主动模式" value="zd"></el-option>
                             <el-option key="被动模式" label="被动模式" value="bd"></el-option>
@@ -81,11 +82,9 @@
                             <el-option key="识别模式" label="识别模式" value="sb"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="配置选择">
-                        <el-select v-model="form.config" placeholder="请选择扫描器配置">
-                            <el-option key="配置1" label="配置1" value="pz1"></el-option>
-                            <el-option key="配置2" label="配置2" value="pz2"></el-option>
-                            <el-option key="配制3" label="配制3" value="pz3"></el-option>
+                    <el-form-item label="方案配置" prop="config">
+                        <el-select v-model="form.config" placeholder="请选择方案">
+                            <el-option v-for="(item, index) in savedTasks" :key="index" :label="item.configName" :value="item.config"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -140,14 +139,14 @@
 
 <script>
 import { Message } from 'element-ui'
-import { getProxy,addProxy,delProxyData } from '@/api/task.js'
+import { getProxy,addProxy,delProxyData,addTaskForm,addAssetsForm,getTask } from '@/api/task.js'
     export default {
       name: 'taskForm',
       data: function() {
         return {
           form: {
             taskName: '',
-            pid: 1,
+            pid: '',
             name: '',
             asset: '',
             headers: '',
@@ -157,11 +156,12 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
             port: '',
             username: '',
             password: '',
-            pattern: ['主动模式'],
-            config: ['配置1']
+            pattern: '',
+            config: ''
           },
           proxy: [],
           uploadFiles: [],
+          savedTasks: [],
           passwd:"password",
           icon:"el-icon-view",
           dialogFormVisibleAddProxy: false,
@@ -185,11 +185,20 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
             proxyUsername: [{ validator: this.checkStringLength, trigger: 'blur' }],
             proxyPassword: [{ validator: this.checkStringLength, trigger: 'blur' }],
           },
+          editFormRules: {
+            taskName: [{required: true, message: '任务名称长度应该在1~40位', trigger: 'blur', min: 1, max: 40},
+              { validator: this.checkStringLength, trigger: 'submit' }],
+            asset: [{required: true, message: '扫描目标不能为空', trigger: 'blur'},
+              { validator: this.checkStringLength, trigger: 'submit' }],
+            pattern: [{required: true, message: '请选择扫描模式', trigger: 'submit'}],
+            config: [{required: true, message: '请选择方案配置', trigger: 'submit'}],
+            headers: [{ validator: this.checkStringLength, trigger: 'submit' }],
+          }
         }
       },
       methods: {
         onSubmit() {
-          this.$message.success('提交成功！')
+          this.addFormData();
         },
         loadTagetFromFile(file, fileList) {
           this.uploadFiles = fileList
@@ -225,10 +234,19 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
                 password: res[i].password
               })
             }
-            // console.log(this.proxy[0])
           }).catch((e) => {
               console.log(e)
             })
+        },
+        getConfig(){
+          getTask().then( res => {
+            for(let i=0; i<res.length; i++){
+              this.savedTasks.push({
+                config: res[i].SID,
+                configName: res[i].task_scheme_name
+              })
+            }
+          })
         },
         handleAddProxy() {
           this.addForm = {
@@ -313,6 +331,38 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
               }else{
                 callback();
               }
+            case "taskName":
+              if (value.length<1 || value.length>40){
+                callback(new Error('任务名称长度应在1~40位'));
+              }else{
+                callback();
+              }
+            case "headers":
+               if (value.length>0){
+                let vFormat = "";
+                vFormat = value.split("\n").join("|&HD&|");
+                if (vFormat.endsWith("|&HD&|")){
+                  vFormat = vFormat.slice(0, -6);
+                }
+                if(vFormat.length>1000){
+                  callback(new Error('Headers长度超过了1000字符!'));
+                }
+                }else{
+                  callback();
+                }
+            case "asset":
+               if (value.length>0){
+                let vFormat = "";
+                vFormat = value.split("\n").join("|&|");
+                if (vFormat.endsWith("|&|")){
+                  vFormat = vFormat.slice(0, -3);
+                }
+                if(vFormat.length>8000){
+                  callback(new Error('资产过长!'));
+                }
+                }else{
+                  callback();
+                } 
             default:
               callback();
               break;
@@ -363,6 +413,59 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
         }
       })
     },
+    addFormData: function() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.$confirm('确认提交吗?', '提示', {})
+            .then(() => {
+              // console.log(this.addForm)
+              const para = Object.assign({}, this.form)
+              if (para['pid']=='' && (para['protocol']!='' || para['address']!='' || para['port']!='' || para['username']!='' || para['password']!='')){
+                this.$message({
+                  message: '请新建代理',
+                  type: 'error'
+                })
+              }else{
+                //处理para 分割 资产、headers 考虑到|&|可能会被header使用
+                para['asset'] = para['asset'].split("\n").join("|&|")
+                if (para['asset'].endsWith('|&|')) {
+                  para['asset'] = para['asset'].slice(0, -3);
+                }
+                para['headers'] = para['headers'].split("\n").join("|&HD&|")
+                // 判断字符串最后三位是否为'|&|'
+                if (para['headers'].endsWith('|&HD&|')) {
+                  // 去掉字符串的最后三位字符
+                  para['headers'] = para['headers'].slice(0, -6);
+                }
+                //使用 |&HD&| 作为分隔符，这要是在headers中出现了那只能说离谱了
+                //资产 走另一个ajax 先储存资产，拿到UUID再储存任务
+                let uuid;
+                let assetJson = {
+                  asset: para['asset']
+                }
+                // addAssetsForm(JSON.stringify(assetJson)).then(res => {
+                  // uuid = res;
+                  para['asset'] = uuid;
+                  // addTaskForm(JSON.stringify(para)).then(res => {
+                  //       this.$message({
+                  //       message: '提交成功',
+                  //       type: 'success'
+                  //     })
+                    this.$refs['form'].resetFields()
+                    this.clearProxy();
+                    // }).catch(e => {
+                    //   console.log(e)
+                    // })
+                // }).catch(e => {
+                //   console.log(e)
+                // })
+                
+            }}).catch(e => {
+              console.log(e)
+            })
+        }
+      })
+    },
         submitFile() {
           for (let i = 0; i < this.uploadFiles.length; i++) {
             const file = this.uploadFiles[i]
@@ -387,7 +490,8 @@ import { getProxy,addProxy,delProxyData } from '@/api/task.js'
 	      }
       },
   mounted() {
-    this.getProxyData(0)
+    this.getConfig();
+    this.getProxyData(0);
   }
 }
 </script>

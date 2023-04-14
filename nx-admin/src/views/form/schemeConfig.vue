@@ -10,115 +10,143 @@
             <div class="form-box">
                 <el-form ref="form" :model="form" label-width="85px">
                     <el-form-item label="选择方案">
-                        <el-select v-model="form.proxyPick" placeholder="空方案" @change="getProxyDetil($event)">
-                            <el-option v-for="(item, index) in proxy" :key="index" :label="item.name" :value="index"></el-option>
+                        <el-select v-model="form.taskPick" placeholder="空方案" @change="getTaskDetil($event)">
+                            <el-option v-for="(item, index) in savedTask" :key="index" :label="item.task_scheme_name" :value="index"></el-option>
                         </el-select>
                     </el-form-item>                    
                     <el-form-item label="方案名称">
-                        <el-input v-model="form.taskSchemeName"></el-input>
+                        <el-input v-model="form.task_scheme_name"></el-input>
                     </el-form-item>
-                    <el-form-item label="最大线程">
-                        <el-input-number v-model="form.taskMaxThread"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="超时设置">
-                        <el-input-number v-model="form.taskTimeout"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="递归深度">
-                        <el-input-number v-model="form.taskRecursionDepth"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="重试次数">
-                        <el-input-number v-model="form.taskRetryTimes"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="响应大小">
-                        <el-input-number v-model="form.taskResponseSize"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="请求速度">
-                        <el-input-number v-model="form.taskRequestSpeed"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="请求队列">
-                        <el-input-number v-model="form.taskRequestQueue"></el-input-number>
-                    </el-form-item>                    
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="最大线程">
+                          <div style="display: flex; align-items: center;">
+                            <el-input-number v-model="form.task_max_thread"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="扫描器最大线程数(个)"></i>
+                            </div>
+                          </div>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="超时设置">
+                          <div style="display: flex; align-items: center;">
+                            <el-input-number v-model="form.task_timeout"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="请求最大超时时长(S)"></i>
+                            </div>
+                          </div>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="递归深度">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_recursion_depth"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="页面爬取递归深度(页)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="重试次数">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_retry_times"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="请求重试次数(次)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="响应大小">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_response_size"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="响应包最大长度(Mb)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="请求速度">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_request_speed"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="每秒最大请求次数(次)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="渲染等待">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_draw_wait"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="页面解析渲染等待时长(S)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">                        
+                        <el-form-item label="请求队列">
+                          <div style="display: flex; align-items: center;">                          
+                            <el-input-number v-model="form.task_request_queue"></el-input-number>
+                            <div style="font-size:20px;">
+                              <i class="el-icon-odometer" style="margin-left: 10px;" title="队列长度限制,最大允许等待扫描的请求数(个)"></i>
+                            </div>
+                          </div>                            
+                        </el-form-item>
+                    </el-col>
+                    </el-row>                    
                     <el-form-item label="请求方法">
-                            <el-checkbox-group size="small" v-model="checkedMethod">
-                                <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm1" :disabled="item === 'GET' || item === 'POST'" :key="item" :checked="item === 'GET' || item === 'POST'" :label="item">{{item}}</el-checkbox>
-                            </el-checkbox-group>
-                            <el-checkbox-group size="small" v-model="checkedMethod" style="margin-top: 4px;">
-                                <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm2" :key="item" :label="item">{{item}}</el-checkbox>
-                            </el-checkbox-group>                            
+                    <el-checkbox-group size="small" v-model="checkedMethod">
+                        <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm1" :disabled="item === 'GET' || item === 'POST'" :key="item" :checked="item === 'GET' || item === 'POST'" :label="item">{{item}}</el-checkbox>
+                      </el-checkbox-group>
+                      <el-checkbox-group size="small" v-model="checkedMethod" style="margin-top: 4px;">
+                        <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm2" :key="item" :label="item">{{item}}</el-checkbox>
+                      </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="UserAgent">
-                        <el-input v-model="form.taskUserAgent" type="textarea" ref="uaRef" rows="3"></el-input>
+                        <el-input v-model="form.task_user_agent" type="textarea" ref="uaRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="主机白名单">
-                        <el-input v-model="form.taskHostWhiteList" type="textarea" ref="whostRef" rows="3"></el-input>
+                        <el-input v-model="form.task_host_white_list" type="textarea" ref="whostRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="主机黑名单">
-                        <el-input v-model="form.taskHostBlackList" type="textarea" ref="bhostRef" rows="3"></el-input>
+                        <el-input v-model="form.task_host_black_list" type="textarea" ref="bhostRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="端口白名单">
-                        <el-input v-model="form.taskPortWhiteList" type="textarea" ref="wportRef" rows="3"></el-input>
+                        <el-input v-model="form.task_port_white_list" type="textarea" ref="wportRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="端口黑名单">
-                        <el-input v-model="form.taskPortBlackList" type="textarea" ref="bportRef" rows="3"></el-input>
+                        <el-input v-model="form.task_port_black_list" type="textarea" ref="bportRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="IP白名单">
-                        <el-input v-model="form.taskIPWhiteList" type="textarea" ref="wipRef" rows="3"></el-input>
+                        <el-input v-model="form.task_ip_white_list" type="textarea" ref="wipRef" rows="3"></el-input>
                     </el-form-item>
                     <el-form-item label="IP黑名单">
-                        <el-input v-model="form.taskIPBlackList" type="textarea" ref="bipRef" rows="3"></el-input>
+                        <el-input v-model="form.task_ip_black_list" type="textarea" ref="bipRef" rows="3"></el-input>
                     </el-form-item>
-                    <el-form-item label="字典管理">
-                        <el-input v-model="form.taskDictionary"></el-input>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">方案提交</el-button>
+                        <el-button>取消</el-button>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
-      		<el-dialog title="新增代理" :visible.sync="dialogFormVisibleAddProxy" :close-on-click-modal="false" :before-close="handleBeforeClose">
-          <el-form :model="addForm" label-width="80px" :rules="addProxyRules" ref="addForm" :keep-alive="false">
-            <el-form-item label="代理名称" prop="proxyName">
-              <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入代理名称" v-model="addForm.proxyName"></el-input>
-              </div>
-            </el-form-item>
-              <el-form-item label="协议类型" prop="proxyProtocol">
-                <el-radio-group v-model="addForm.proxyProtocol">
-                  <el-radio class="radio" :label=0>SOCKS5</el-radio>
-                  <el-radio class="radio" :label=1>HTTPS</el-radio>
-                  <el-radio class="radio" :label=2>HTTP</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            <el-form-item label="代理地址" prop="proxyAddress">
-              <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入代理地址" v-model="addForm.proxyAddress"></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="代理端口" prop="proxyPort">
-              <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入代理端口" v-model="addForm.proxyPort"></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="用户名" prop="proxyUsername">
-              <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入用户名" v-model="addForm.proxyUsername"></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="密码" prop="proxyPassword">
-              <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入密码" v-model="addForm.proxyPassword"></el-input>
-              </div>
-            </el-form-item>                  
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click.native="cancelAdd">取消</el-button>
-            <el-button type="primary" @click="addProxyData">添加</el-button>
-          </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
 import { Message } from 'element-ui'
-import { getProxy,addProxy,delProxyData } from '@/api/task.js'
+import { getTask,addProxy,delProxyData,updateTask,addTaskConf } from '@/api/task.js'
 const checkedMethod1 = ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'];
 const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY']
     export default {
@@ -126,96 +154,125 @@ const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY
       data: function() {
         return {
             form: {
-                taskSchemeName: '',
-                taskMaxThread: '',
-                taskTimeout: '',
-                taskRecursionDepth: '',
-                taskRetryTimes: '',
-                taskResponseSize: '',
-                taskRequestSpeed: '',
-                taskRequestMethod: '',
-                taskRequestQueue: '',
-                taskUserAgent: '',
-                taskHostWhiteList: '',
-                taskHostBlackList: '',
-                taskPortWhiteList: '',
-                taskPortBlackList: '',
-                taskIPWhiteList: '',
-                taskIPBlackList: '',
-                taskDictionary: '',
+                SID: '',
+                task_scheme_name: '',
+                task_max_thread: '',
+                task_timeout: '',
+                task_recursion_depth: '',
+                task_retry_times: '',
+                task_response_size: '',
+                task_request_speed: '',
+                task_request_method: '',
+                task_request_queue: '',
+                task_user_agent: '',
+                task_host_white_list: '',
+                task_host_black_list: '',
+                task_port_white_list: '',
+                task_port_black_list: '',
+                task_draw_wait:'',
+                task_ip_white_list: '',
+                task_ip_black_list: ''
             },
           selectedMethodsForm1: checkedMethod1,
           selectedMethodsForm2: checkedMethod2,
           checkedMethod: [], // 存储已选中的请求方式
-          proxy: [],
-          uploadFiles: [],
-          passwd:"password",
-          icon:"el-icon-view",
-          dialogFormVisibleAddProxy: false,
-        addForm: {
-            proxyName: '',
-            proxyProtocol: 0,
-            proxyAddress: '',
-            proxyPort: '',
-            proxyUsername: '',
-            proxyPassword: ''
-          }, 
-        addProxyRules: {
-            proxyName: [{required: true, message: '代理名称长度应该在1~10位', trigger: 'blur', min: 1, max: 10},
-              { validator: this.checkStringLength, trigger: 'blur' }],
-            proxyProtocol: [{required: true,message: '请选择协议类型'},
-              { validator: this.checkStringLength, trigger: 'submit' }],
-            proxyAddress: [{required: true,message: '请输入地址'},
-              { validator: this.checkStringLength, trigger: 'blur' }],
-            proxyPort: [{required: true,message: '端口应该低于65535'},
-              { validator: this.checkStringLength, trigger: 'blur' }],
-            proxyUsername: [{ validator: this.checkStringLength, trigger: 'blur' }],
-            proxyPassword: [{ validator: this.checkStringLength, trigger: 'blur' }],
-          },
+          savedTask: [] //已有的配置
         }
       },
       methods: {
         onSubmit() {
-          this.$message.success('提交成功！')
+          //console.log(this.form);
+          //this.$message.success('提交成功！')
+          this.updateTaskData(this.form.SID);
         },
-        loadTagetFromFile(file, fileList) {
-          this.uploadFiles = fileList
-        },
-        cancelAdd(){
-          this.dialogFormVisibleAddProxy = false;
-        },    
-        formatCont:function(){
-          this.form.asset = this.form.asset.replace(/\s+\r\n/g, "\r\n");
-        },
-        showPass:function(){
-        if( this.passwd == "text" ) {
-            this.passwd = "password"
-            this.icon = "el-icon-view"
-          } else {
-            this.passwd = "text"
-            this.icon = "el-icon-unlock"
-          };
-        },
-        getProxyData:function(ID){
-          const para = {
-            func: ID
-          }
-          getProxy(para).then(res => {
+        getTaskData:function(){
+          getTask().then(res => {
             for (let i = 0; i < res.length; i++){
-              this.proxy.push({
-                pid: res[i].PID,
-                name: res[i].name,
-                protocol: res[i].protocol,
-                address: res[i].address,
-                port: res[i].port,
-                username: res[i].username,
-                password: res[i].password
+              this.savedTask.push({
+                SID: res[i].SID,
+                task_scheme_name: res[i].task_scheme_name,
+                task_max_thread: res[i].task_max_thread,
+                task_timeout: res[i].task_timeout,
+                task_recursion_depth: res[i].task_recursion_depth,
+                task_retry_times: res[i].task_retry_times,
+                task_response_size: res[i].task_response_size,
+                task_request_speed: res[i].task_request_speed,
+                task_request_method: res[i].task_request_method,
+                task_request_queue: res[i].task_request_queue,
+                task_draw_wait: res[i].task_draw_wait,
+                task_user_agent: res[i].task_user_agent.split("|&|").join("\n"),
+                task_host_white_list: res[i].task_host_white_list,
+                task_host_black_list: res[i].task_host_black_list,
+                task_port_white_list: res[i].task_port_white_list,
+                task_port_black_list: res[i].task_port_black_list,
+                task_ip_white_list: res[i].task_ip_white_list,
+                task_ip_black_list: res[i].task_ip_black_list
               })
             }
-            // console.log(this.proxy[0])
           }).catch((e) => {
               console.log(e)
             })
+        },
+        compJson(jsonStr1, jsonStr2) {
+          const obj1 = JSON.parse(jsonStr1);
+          const obj2 = JSON.parse(jsonStr2);
+          const keys1 = Object.keys(obj1);
+          const keys2 = Object.keys(obj2);
+          if (keys1.length !== keys2.length || !keys1.every(key => keys2.includes(key))) {
+            return false;
+          }
+          for (const key of keys1) {
+            const value1 = obj1[key];
+            const value2 = obj2[key];
+            if (value1 !== value2 && `${value1}` !== `${value2}`) {
+              return false;
+            }
+          }
+          return true;
+        },
+        updateTaskData(SID){
+          this.$refs.form.validate(valid => {
+            if (valid) {
+              this.$confirm('确认提交吗?', '提示', {})
+                .then(() => {
+                  if(SID!=''){
+                    const para = Object.assign({}, this.form)
+                    // 查看是否有更改
+                    para['task_request_method'] = this.formatMethod(this.checkedMethod.join(',')).split("").sort().join("");
+                    delete para['taskPick'];
+                    if(!this.compJson(JSON.stringify(para),JSON.stringify(this.savedTask[SID-1]))){
+                      //update UA插入换行符
+                      para['task_user_agent'] = para['task_user_agent'].split("\n").join("|&|");
+                      updateTask(JSON.stringify(para)).then(res => {
+                      }).catch(e => {
+                        console.log(e)
+                    })
+                    this.$message({
+                          message: '修改成功',
+                          type: 'success'
+                      })
+                    }
+                  }else{
+                    //新增数据
+                    const paraNew = Object.assign({}, this.form)
+                    paraNew['task_request_method'] = this.formatMethod(this.checkedMethod.join(',')).split("").sort().join("");
+                    paraNew['task_user_agent'] = paraNew['task_user_agent'].split("\n").join("|&|");
+                    addTaskConf(JSON.stringify(paraNew)).then(res => {
+                      this.$message({
+                          message: '新增成功',
+                          type: 'success'
+                      })
+                    }).catch(e => {
+                      console.log(e);
+                    })
+                  }
+                })
+                .catch(e => {
+                  // 打印一下错误
+                  console.log(e)
+                })
+            }
+          })
         },
         handleAddProxy() {
           this.addForm = {
@@ -305,14 +362,50 @@ const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY
               break;
           }
         },
-        getProxyDetil:function(id){
-          this.form.pid = this.proxy[id].pid;
-          this.form.name = this.proxy[id].name;
-          this.form.protocol = this.proxy[id].protocol;
-          this.form.address = this.proxy[id].address;
-          this.form.port = this.proxy[id].port;
-          this.form.username = this.proxy[id].username;
-          this.form.password = this.proxy[id].password;
+        formatMethod:function(methodNum){
+          const methodsDict = {'0':'HEAD', '1':'PUT', '2':'PATCH', '3':'DELETE', '4':'OPTIONS', '5':'CONNECT', '6':'TRACE', '7':'MOVE', '8':'PROPFIND', '9':'COPY'};
+          const result = [];
+          if (/^\d+$/.test(methodNum)){
+            const contentArray = methodNum.toString().split('');
+            for (let i = 0; i < contentArray.length; i++) {
+            const index = contentArray[i];
+            if (methodsDict[index]) {
+              result.push(methodsDict[index]);
+            }
+          }
+          return result;
+          }else{
+            const methodsArray = methodNum.split(',');
+            const result = [];
+            for (let i = 0; i < methodsArray.length; i++) {
+              const method = methodsArray[i].trim();
+              const key = Object.keys(methodsDict).find(k => methodsDict[k] === method);
+              if (key !== undefined) {
+                result.push(key);
+              }
+            }
+            return result.join('');
+          }
+        },
+        getTaskDetil:function(i){
+          this.form.SID = this.savedTask[i].SID;
+          this.form.task_scheme_name = this.savedTask[i].task_scheme_name;
+          this.form.task_max_thread = this.savedTask[i].task_max_thread,
+          this.form.task_timeout = this.savedTask[i].task_timeout,
+          this.form.task_recursion_depth = this.savedTask[i].task_recursion_depth,
+          this.form.task_retry_times = this.savedTask[i].task_retry_times,
+          this.form.task_response_size = this.savedTask[i].task_response_size,
+          this.form.task_request_speed = this.savedTask[i].task_request_speed,
+          this.checkedMethod = this.formatMethod(this.savedTask[i].task_request_method),
+          this.form.task_request_queue = this.savedTask[i].task_request_queue,
+          this.form.task_draw_wait = this.savedTask[i].task_draw_wait,
+          this.form.task_user_agent = this.savedTask[i].task_user_agent,
+          this.form.task_host_white_list = this.savedTask[i].task_host_white_list,
+          this.form.task_host_black_list = this.savedTask[i].task_host_black_list,
+          this.form.task_port_white_list = this.savedTask[i].task_port_white_list,
+          this.form.task_port_black_list = this.savedTask[i].task_port_black_list,
+          this.form.task_ip_white_list = this.savedTask[i].task_ip_white_list,
+          this.form.task_ip_black_list = this.savedTask[i].task_ip_black_list
         },
       clearProxy:function(){        
         for (let prop in this.form) {
@@ -336,7 +429,6 @@ const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY
                 this.$refs['addForm'].resetFields()
                 this.dialogFormVisibleAddProxy = false
                 this.proxy = [];
-                this.getProxyData(0)
                 // this.proxy.splice(this.form.proxyPick, 1)
                 // this.getRes('selectAllTouches',1)
               }).catch(e => {
@@ -350,31 +442,9 @@ const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY
         }
       })
     },
-        submitFile() {
-          for (let i = 0; i < this.uploadFiles.length; i++) {
-            const file = this.uploadFiles[i]
-            if (file.name.endsWith('.txt')){
-              let reader = new FileReader()
-              reader.readAsText(file.raw)
-              reader.onload = () => {
-                this.form.asset += reader.result;
-                this.form.asset ? '' : this.form.asset = '\n\r'+this.form.asset
-              }
-            }else{
-              Message({
-                message: '只能读取TXT文件',
-                type: 'warning',
-                duration: 3 * 1000
-              })
-            }
-            }
-            // console.log(this.form.asset)
-            this.uploadFiles = [];
-            this.$refs.assetRef.focus();
-	      }
-      },
+  },
   mounted() {
-    this.getProxyData(0)
+    this.getTaskData()    
   }
 }
 </script>

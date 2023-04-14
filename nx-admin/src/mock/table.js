@@ -1,5 +1,5 @@
 import { param2Obj } from '@/utils'
-import { fetchData } from '@/axios/touch.js'
+// import { fetchData } from '@/axios/touch.js'
 
 
 // let List = []
