@@ -3,94 +3,72 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item><i class="el-icon-s-order"></i> 扫描 </el-breadcrumb-item>
-                <el-breadcrumb-item>新建任务</el-breadcrumb-item>
+                <el-breadcrumb-item>方案配置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="form-box">
-                <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="任务名称">
-                        <el-input v-model="form.taskName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="资产列表">
-                        <el-input type="textarea" ref="assetRef" rows="5" v-model="form.asset" placeholder="逐行输入扫描目标地址" @blur.prevent="formatCont()"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-upload ref="uploadAsset" action="alert" :auto-upload="false" :file-list="uploadFiles" :on-change="loadTagetFromFile" accept=".txt" >
-                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button size="small" @click="submitFile">上传</el-button>
-                      </el-upload>
-                    </el-form-item>
-                    <el-form-item label="Headers">
-                      <el-input type="textarea" rows="5" v-model="form.headers" placeholder="逐行输入自定义Headers"></el-input>
-                    </el-form-item>
-                    <el-row>
-                      <el-col :span="8">
-                        <el-form-item label="网络代理">
-                          <el-select v-model="form.proxyPick" placeholder="选择代理" @change="getProxyDetil($event)">
+                <el-form ref="form" :model="form" label-width="85px">
+                    <el-form-item label="选择方案">
+                        <el-select v-model="form.proxyPick" placeholder="空方案" @change="getProxyDetil($event)">
                             <el-option v-for="(item, index) in proxy" :key="index" :label="item.name" :value="index"></el-option>
-                          </el-select>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="12">
-                        <el-form-item label-width="5px">
-                          <el-button type="primary" plain @click="handleAddProxy">新增</el-button>
-                          <el-button type="warning" v-model="proxy" plain @click="delProxy(form.pid)" style="margin: 0;">删除</el-button>
-                          <el-button type="success" plain @click="clearProxy" style="margin: 0;">清空</el-button>
-                        </el-form-item>
-                      </el-col>
-                    </el-row> 
-                    <el-row>
-                        <el-col :span="7">
-                          <el-form-item label="">
-                            <el-select v-model="form.protocol" placeholder="协议">
-                                <el-option key="SOCKS5" label="SOCKS5" value="SOCKS5"></el-option>
-                                <el-option key="HTTPS" label="HTTPS" value="HTTPS"></el-option>
-                                <el-option key="HTTP" label="HTTP" value="HTTP"></el-option>
-                            </el-select>
-                          </el-form-item>
-                        </el-col>
-                          <el-col :span="6">
-                            <el-form-item label-width="2px">
-                              <el-input v-model="form.address" placeholder="IP"></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="3">
-                            <el-form-item label-width="2px">
-                              <el-input v-model="form.port" placeholder="PORT"></el-input>
-                          </el-form-item>
-                        </el-col>                        
-                        <el-col :span="3">
-                            <el-form-item label-width="2px">
-                              <el-input v-model="form.username" placeholder="用户名"></el-input>
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="5">
-                            <el-form-item label-width="2px">
-                              <el-input :type="passwd" v-model="form.password" placeholder="密码">
-                                <i slot="suffix" :class="icon" @click="showPass"></i>
-                              </el-input>
-                          </el-form-item>
-                        </el-col>                        
-                    </el-row>
-                    <el-form-item label="模式选择">
-                        <el-select v-model="form.pattern" placeholder="请选择扫描模式">
-                            <el-option key="主动模式" label="主动模式" value="zd"></el-option>
-                            <el-option key="被动模式" label="被动模式" value="bd"></el-option>
-                            <el-option key="混合模式" label="混合模式" value="hh"></el-option>
-                            <el-option key="识别模式" label="识别模式" value="sb"></el-option>
                         </el-select>
+                    </el-form-item>                    
+                    <el-form-item label="方案名称">
+                        <el-input v-model="form.taskSchemeName"></el-input>
                     </el-form-item>
-                    <el-form-item label="配置选择">
-                        <el-select v-model="form.config" placeholder="请选择扫描器配置">
-                            <el-option key="配置1" label="配置1" value="pz1"></el-option>
-                            <el-option key="配置2" label="配置2" value="pz2"></el-option>
-                            <el-option key="配制3" label="配制3" value="pz3"></el-option>
-                        </el-select>
+                    <el-form-item label="最大线程">
+                        <el-input-number v-model="form.taskMaxThread"></el-input-number>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">任务提交</el-button>
-                        <el-button>取消</el-button>
+                    <el-form-item label="超时设置">
+                        <el-input-number v-model="form.taskTimeout"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="递归深度">
+                        <el-input-number v-model="form.taskRecursionDepth"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="重试次数">
+                        <el-input-number v-model="form.taskRetryTimes"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="响应大小">
+                        <el-input-number v-model="form.taskResponseSize"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="请求速度">
+                        <el-input-number v-model="form.taskRequestSpeed"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="请求队列">
+                        <el-input-number v-model="form.taskRequestQueue"></el-input-number>
+                    </el-form-item>                    
+                    <el-form-item label="请求方法">
+                            <el-checkbox-group size="small" v-model="checkedMethod">
+                                <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm1" :disabled="item === 'GET' || item === 'POST'" :key="item" :checked="item === 'GET' || item === 'POST'" :label="item">{{item}}</el-checkbox>
+                            </el-checkbox-group>
+                            <el-checkbox-group size="small" v-model="checkedMethod" style="margin-top: 4px;">
+                                <el-checkbox style="width: 93px;margin-right: 1px;" border v-for="item in selectedMethodsForm2" :key="item" :label="item">{{item}}</el-checkbox>
+                            </el-checkbox-group>                            
+                    </el-form-item>
+                    <el-form-item label="UserAgent">
+                        <el-input v-model="form.taskUserAgent" type="textarea" ref="uaRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="主机白名单">
+                        <el-input v-model="form.taskHostWhiteList" type="textarea" ref="whostRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="主机黑名单">
+                        <el-input v-model="form.taskHostBlackList" type="textarea" ref="bhostRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="端口白名单">
+                        <el-input v-model="form.taskPortWhiteList" type="textarea" ref="wportRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="端口黑名单">
+                        <el-input v-model="form.taskPortBlackList" type="textarea" ref="bportRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="IP白名单">
+                        <el-input v-model="form.taskIPWhiteList" type="textarea" ref="wipRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="IP黑名单">
+                        <el-input v-model="form.taskIPBlackList" type="textarea" ref="bipRef" rows="3"></el-input>
+                    </el-form-item>
+                    <el-form-item label="字典管理">
+                        <el-input v-model="form.taskDictionary"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -141,25 +119,34 @@
 <script>
 import { Message } from 'element-ui'
 import { getProxy,addProxy,delProxyData } from '@/api/task.js'
+const checkedMethod1 = ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'];
+const checkedMethod2 = ['OPTIONS', 'CONNECT', 'TRACE', 'MOVE', 'PROPFIND', 'COPY']
     export default {
       name: 'taskForm',
       data: function() {
         return {
-          form: {
-            taskName: '',
-            pid: 1,
-            name: '',
-            asset: '',
-            headers: '',
-            protocol: '',
-            proxyPick: '',
-            address: '',
-            port: '',
-            username: '',
-            password: '',
-            pattern: ['主动模式'],
-            config: ['配置1']
-          },
+            form: {
+                taskSchemeName: '',
+                taskMaxThread: '',
+                taskTimeout: '',
+                taskRecursionDepth: '',
+                taskRetryTimes: '',
+                taskResponseSize: '',
+                taskRequestSpeed: '',
+                taskRequestMethod: '',
+                taskRequestQueue: '',
+                taskUserAgent: '',
+                taskHostWhiteList: '',
+                taskHostBlackList: '',
+                taskPortWhiteList: '',
+                taskPortBlackList: '',
+                taskIPWhiteList: '',
+                taskIPBlackList: '',
+                taskDictionary: '',
+            },
+          selectedMethodsForm1: checkedMethod1,
+          selectedMethodsForm2: checkedMethod2,
+          checkedMethod: [], // 存储已选中的请求方式
           proxy: [],
           uploadFiles: [],
           passwd:"password",

@@ -71,7 +71,7 @@
           <el-input v-model="editForm.touchvalue[index]" auto-complete="off"></el-input>
         </div>
         <div style="display: flex; justify-content: flex-start; align-items: center;">
-                <el-button @click="addInputForEdit" type="primary" icon="el-icon-plus" circle></el-button>
+          <el-button @click="addInputForEdit" type="primary" icon="el-icon-plus" circle></el-button>
         </div>
 				</el-form-item>
 				<el-form-item label="特征来源">

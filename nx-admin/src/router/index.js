@@ -418,12 +418,12 @@ export const constantRouterMap = [
         component: () => import('@/views/form/BaseForm'),
         meta: { title: 'taskForm' }
       },
-      // {
-      //   path: 'schemeConfig',
-      //   name: 'schemeConfig',
-      //   component: () => import('@/views/form/schemeConfig'),
-      //   meta: { title: 'schemeConfig' }
-      // },
+      {
+        path: 'schemeConfig',
+        name: 'schemeConfig',
+        component: () => import('@/views/form/schemeConfig'),
+        meta: { title: 'schemeConfig' }
+      },
       {
         path: 'VueEditor',
         name: 'VueEditor',
