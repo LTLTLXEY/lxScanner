@@ -432,9 +432,7 @@ import { getProxy,addProxy,delProxyData,addTaskForm,addAssetsForm,getTask } from
                   para['asset'] = para['asset'].slice(0, -3);
                 }
                 para['headers'] = para['headers'].split("\n").join("|&HD&|")
-                // 判断字符串最后三位是否为'|&|'
                 if (para['headers'].endsWith('|&HD&|')) {
-                  // 去掉字符串的最后三位字符
                   para['headers'] = para['headers'].slice(0, -6);
                 }
                 //使用 |&HD&| 作为分隔符，这要是在headers中出现了那只能说离谱了
@@ -443,23 +441,22 @@ import { getProxy,addProxy,delProxyData,addTaskForm,addAssetsForm,getTask } from
                 let assetJson = {
                   asset: para['asset']
                 }
-                // addAssetsForm(JSON.stringify(assetJson)).then(res => {
-                  // uuid = res;
+                addAssetsForm(JSON.stringify(assetJson)).then(res => {
+                  uuid = res;
                   para['asset'] = uuid;
-                  // addTaskForm(JSON.stringify(para)).then(res => {
-                  //       this.$message({
-                  //       message: '提交成功',
-                  //       type: 'success'
-                  //     })
+                  addTaskForm(JSON.stringify(para)).then(res => {
+                        this.$message({
+                        message: '提交成功',
+                        type: 'success'
+                      })
                     this.$refs['form'].resetFields()
                     this.clearProxy();
-                    // }).catch(e => {
-                    //   console.log(e)
-                    // })
-                // }).catch(e => {
-                //   console.log(e)
-                // })
-                
+                    }).catch(e => {
+                      console.log(e)
+                    })
+                }).catch(e => {
+                  console.log(e)
+                })
             }}).catch(e => {
               console.log(e)
             })
