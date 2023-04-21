@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getProxy(params = 0) {
   return request({
-    url: 'http://127.0.0.1/lx/proxy.php',
+    url: 'http://127.0.0.1:8000/proxy/?func=0',
     method: 'get',
     params: params
   })
@@ -10,7 +10,7 @@ export function getProxy(params = 0) {
 
 export function addProxy(addProxyData) {
   return request({
-    url: 'http://127.0.0.1/lx/proxy.php?func=3',
+    url: 'http://127.0.0.1:8000/proxy/?func=3',
     method: 'post',
     data: {
       addProxyData
@@ -20,7 +20,8 @@ export function addProxy(addProxyData) {
 
 export function delProxyData(params) {
   return request({
-    url: 'http://127.0.0.1/lx/proxy.php?func=2',
+    // url: 'http://127.0.0.1/lx/proxy.php?func=2',
+    url: 'http://127.0.0.1:8000/proxy/?func=2',
     method: 'get',
     params: params
   })
@@ -28,7 +29,7 @@ export function delProxyData(params) {
 
 export function getTask(params) {
   return request({
-    url: 'http://127.0.0.1/lx/task.php?way=getter',
+    url: 'http://127.0.0.1:8000/api/?way=getter',
     method: 'get',
     params: params
   })
@@ -36,7 +37,7 @@ export function getTask(params) {
 
 export function updateTask(updateTaskData) {
   return request({
-    url: 'http://127.0.0.1/lx/task.php?way=update',
+    url: 'http://127.0.0.1:8000/api/?way=update',
     method: 'post',
     data: {
       updateTaskData
@@ -46,7 +47,7 @@ export function updateTask(updateTaskData) {
 
 export function addTaskConf(data) {
   return request({
-    url: 'http://127.0.0.1/lx/task.php?way=setter&action=config',
+    url: 'http://127.0.0.1:8000/api/?way=setter&action=config',
     method: 'post',
     data: {
       data
@@ -56,7 +57,8 @@ export function addTaskConf(data) {
 
 export function addTaskForm(data) {
   return request({
-    url: 'http://127.0.0.1/lx/task.php?way=setter&action=task',
+    // url: 'http://127.0.0.1/lx/task.php?way=setter&action=task',
+    url: 'http://127.0.0.1:8000/api/?way=setter&action=task',
     method: 'post',
     data: {
       data
@@ -66,7 +68,7 @@ export function addTaskForm(data) {
 
 export function addAssetsForm(data) {
   return request({
-    url: 'http://127.0.0.1/lx/task.php?way=setter&action=assets',
+    url: 'http://127.0.0.1:8000/api/?way=setter&action=assets',
     method: 'post',
     data: {
       data

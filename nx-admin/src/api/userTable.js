@@ -13,7 +13,8 @@ export function getUserListPage(params) {
 }
 export function getTouches(params) {
   return request({
-    url: 'http://127.0.0.1/lx/touches.php',
+    // url: 'http://127.0.0.1/lx/touches.php',
+    url: 'http://127.0.0.1:8000/touchs',
     method: 'get',
     params: params
   })
@@ -57,7 +58,7 @@ export function addTouch(addJson) {
 }
 export function edittouch(editJson) {
   return request({
-    url: 'http://localhost/lx/edittouch.php',
+    url: 'http://127.0.0.1:8000/edittouch/',
     method: 'post',
     data: {
       editJson

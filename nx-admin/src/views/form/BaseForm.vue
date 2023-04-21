@@ -76,10 +76,10 @@
                     </el-row>
                     <el-form-item label="模式选择" prop="pattern">
                         <el-select v-model="form.pattern" placeholder="请选择扫描模式">
-                            <el-option key="主动模式" label="主动模式" value="zd"></el-option>
-                            <el-option key="被动模式" label="被动模式" value="bd"></el-option>
-                            <el-option key="混合模式" label="混合模式" value="hh"></el-option>
-                            <el-option key="识别模式" label="识别模式" value="sb"></el-option>
+                            <el-option key="主动模式" label="主动模式" value=0></el-option>
+                            <el-option key="被动模式" label="被动模式" value=1></el-option>
+                            <el-option key="混合模式" label="混合模式" value=2></el-option>
+                            <el-option key="识别模式" label="识别模式" value=3></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="方案配置" prop="config">
