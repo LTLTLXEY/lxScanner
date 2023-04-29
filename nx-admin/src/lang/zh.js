@@ -23,6 +23,7 @@ export default {
     disabled: '禁用',
     customtrigger: '自定义事件',
     form: '表单',
+    taskTabs: '任务列表',
     Tabs: 'tabs选项卡',
     Table: '表格',
     Icons: 'icon图标',

@@ -2,31 +2,13 @@
     <div class="app-container">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-message"></i> tab选项卡</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-message"></i> 任务列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <el-tabs v-model="message">
-                <el-tab-pane :label="`未读消息(${unread.length})`" name="first">
-                    <el-table :data="unread" :show-header="false" style="width: 100%">
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <span class="message-title">{{scope.row.title}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="date" width="180"></el-table-column>
-                        <el-table-column width="120">
-                            <template slot-scope="scope">
-                                <el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="handle-row">
-                        <el-button type="primary">全部标为已读</el-button>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane :label="`已读消息(${read.length})`" name="second">
-                    <template v-if="message === 'second'">
+                <el-tab-pane :label="`已完成(${read.length})`" name="first">
+                    <template v-if="message === 'first'">
                         <el-table :data="read" :show-header="false" style="width: 100%">
                             <el-table-column>
                                 <template slot-scope="scope">
@@ -40,12 +22,25 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">删除全部</el-button>
-                        </div>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
+                <el-tab-pane :label="`进行中(${unread.length})`" name="second">
+                    <el-table :data="unread" :show-header="false" style="width: 100%">
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <span class="message-title">{{scope.row.title}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="date" width="180"></el-table-column>
+                        <el-table-column width="120">
+                            <template slot-scope="scope">
+                                <el-button size="small" @click="handleRead(scope.$index)">标为完成</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
+                
+                <!-- <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
                     <template v-if="message === 'third'">
                         <el-table :data="recycle" :show-header="false" style="width: 100%">
                             <el-table-column>
@@ -64,7 +59,7 @@
                             <el-button type="danger">清空回收站</el-button>
                         </div>
                     </template>
-                </el-tab-pane>
+                </el-tab-pane> -->
             </el-tabs>
         </div>
     </div>

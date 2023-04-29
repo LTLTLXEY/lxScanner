@@ -370,21 +370,21 @@ export const constantRouterMap = [
   //     }
   //   ]
   // },
-  // 表格
-  // {
-  //   path: '/Tabs',
-  //   component: Layout,
-  //   redirect: 'Tabs',
-  //   meta: { title: 'Tabs', icon: 'tab' },
-  //   children: [
-  //     {
-  //       path: 'Tabs',
-  //       name: 'Tabs',
-  //       component: () => import('@/views/table/Tabs'),
-  //       meta: { title: 'Tabs', icon: 'tab' }
-  //     }
-  //   ]
-  // },
+  // 表格选项卡
+  {
+    path: '/Tabs',
+    component: Layout,
+    redirect: 'Tabs',
+    meta: { title: 'Tabs', icon: 'tab' },
+    children: [
+      {
+        path: 'Tabs',
+        name: 'Tabs',
+        component: () => import('@/views/table/Tabs'),
+        meta: { title: 'taskTabs', icon: 'tab' }
+      }
+    ]
+  },
 
   // 滚动定位
   // {
