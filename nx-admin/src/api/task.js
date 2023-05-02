@@ -75,3 +75,36 @@ export function addAssetsForm(data) {
     }
   })
 }
+
+export function getTaskStatus() {
+  return request({
+    url: 'http://127.0.0.1:8000/gettasks/',
+    method: 'get',
+  })
+}
+
+export function editTaskStatus(params) {
+  return request({
+    url: 'http://127.0.0.1:8000/edittasks/',
+    method: 'get',
+    params: params
+  })
+}
+
+export function getScanRes(params) {
+  return request({
+    url: 'http://127.0.0.1:8000/getscanres/',
+    method: 'get',
+    params: params
+  })
+}
+
+export function getTouchKey(data) {
+  return request({
+    url: 'http://127.0.0.1:8000/gettouchkey/',
+    method: 'post',
+    data: {
+      data
+    }
+  })
+}

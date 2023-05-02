@@ -56,9 +56,9 @@ export function addTouch(addJson) {
     }
   })
 }
-export function edittouch(editJson) {
+export function edittouch(editJson, action) {
   return request({
-    url: 'http://127.0.0.1:8000/edittouch/',
+    url: 'http://127.0.0.1:8000/edittouch/?action='+action,
     method: 'post',
     data: {
       editJson

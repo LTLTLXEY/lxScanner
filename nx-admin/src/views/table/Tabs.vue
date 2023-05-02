@@ -10,15 +10,21 @@
                 <el-tab-pane :label="`已完成(${read.length})`" name="first">
                     <template v-if="message === 'first'">
                         <el-table :data="read" :show-header="false" style="width: 100%">
+                            <el-table-column width="50">
+                                <template slot-scope="scope" >
+                                    <span>{{scope.row.TID}}</span>
+                                </template>
+                            </el-table-column>                            
                             <el-table-column>
                                 <template slot-scope="scope">
                                     <span class="message-title">{{scope.row.title}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
+                            <el-table-column width="150">
                                 <template slot-scope="scope">
-                                    <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
+                                    <el-button size="small" type="normal" @click="handleDetial(scope.row.TID)">查看</el-button>
+                                    <el-button size="small" type="danger" @click="handleDel(scope.row.TID)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -26,6 +32,11 @@
                 </el-tab-pane>
                 <el-tab-pane :label="`进行中(${unread.length})`" name="second">
                     <el-table :data="unread" :show-header="false" style="width: 100%">
+                        <el-table-column width="50">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.TID}}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span class="message-title">{{scope.row.title}}</span>
@@ -34,81 +45,116 @@
                         <el-table-column prop="date" width="180"></el-table-column>
                         <el-table-column width="120">
                             <template slot-scope="scope">
-                                <el-button size="small" @click="handleRead(scope.$index)">标为完成</el-button>
+                                <el-button size="small" @click="handleRead(scope.row.TID)">标为完成</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
-                
-                <!-- <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
-                    <template v-if="message === 'third'">
-                        <el-table :data="recycle" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
-                                <template slot-scope="scope">
-                                    <el-button @click="handleRestore(scope.$index)">还原</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">清空回收站</el-button>
-                        </div>
-                    </template>
-                </el-tab-pane> -->
             </el-tabs>
         </div>
     </div>
 </template>
 
 <script>
+
+import {
+  getTaskStatus,
+  editTaskStatus
+} from '@/api/task'
+
     export default {
       name: 'tabs',
       data() {
         return {
           message: 'first',
           showHeader: false,
-          unread: [{
-            date: '2018-04-19 20:00:00',
-            title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-          }, {
-            date: '2018-04-19 21:00:00',
-            title: '今晚12点整发大红包，先到先得'
-          }],
-          read: [{
-            date: '2018-04-19 20:00:00',
-            title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-          }],
-          recycle: [{
-            date: '2018-04-19 20:00:00',
-            title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-          }]
+          unread: [],
+          read: []
         }
       },
       methods: {
+        getStatus(){
+            getTaskStatus().then(res => {
+                for (let i = 0; i < res.status.length; i++) {
+                    if (res.status[i].stat == 0){
+                            this.read.push({
+                            TID: res.status[i].TID,
+                            title: res.status[i].name,
+                            stat: res.status[i].stat,
+                            date: res.status[i].time
+                        })
+                    }else{
+                        this.unread.push({
+                            TID: res.status[i].TID,
+                            title: res.status[i].name,
+                            stat: res.status[i].stat,
+                            date: res.status[i].time
+                        })
+                    }
+                }
+                this.read.reverse()
+                this.unread.reverse()
+            }).catch((e) => {
+                console.log(e)
+            })
+        },
+
         handleRead(index) {
-          const item = this.unread.splice(index, 1)
-          console.log(item)
-          this.read = item.concat(this.read)
+          this.$confirm('确认标记已完成吗?', '标记', {})
+            .then(() => {
+              const para = {
+                "action": "en",
+                "tid": index
+              }
+              editTaskStatus(para).then(res => {
+                    this.$message({
+                    message: '标记成功',
+                    type: 'success'
+                    })
+                    this.unread.splice(0, this.unread.length)
+                    this.getStatus()
+                }).catch(e => {
+                console.log(e)
+                })
+            })
+            .catch(e => {
+              console.log(e)
+            })
         },
         handleDel(index) {
-          const item = this.read.splice(index, 1)
-          this.recycle = item.concat(this.recycle)
+            this.$confirm('确认删除吗?', '删除', {})
+            .then(() => {
+              const para = {
+                "action": "un",
+                "tid": index
+              }
+              editTaskStatus(para).then(res => {
+                    this.$message({
+                    message: '删除成功',
+                    type: 'success'
+                    })
+                    this.read.splice(0, this.read.length)
+                    this.getStatus()
+                }).catch(e => {
+                console.log(e)
+                })
+            })
+            .catch(e => {
+              console.log(e)
+            })
         },
-        handleRestore(index) {
-          const item = this.recycle.splice(index, 1)
-          this.read = item.concat(this.read)
+        handleDetial(index) {
+            console.log(this.$router.push('/table/scanres?Tid='+index))
         }
       },
       computed: {
         unreadNum() {
           return this.unread.length
         }
-      }
+      },
+        mounted(){
+            this.getStatus()
+        }
     }
 
 </script>

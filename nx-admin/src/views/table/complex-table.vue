@@ -98,28 +98,28 @@
     <!-- 新增界面 -->
     		<el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisibleAdd" :close-on-click-modal="false" :before-close="handleBeforeClose">
           <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm" :keep-alive="false">
-            <el-form-item label="指纹名称" prop="touchkeyAdd">
+            <el-form-item label="指纹名称" prop="touchkey">
               <div style="display: flex; align-items: center;">
-                <el-input auto-complete="off" placeholder="请输入指纹名称" v-model="addForm.touchkeyAdd"></el-input>
+                <el-input auto-complete="off" placeholder="请输入指纹名称" v-model="addForm.touchkey"></el-input>
               </div>
             </el-form-item>
-            <el-form-item label="指纹内容" prop="inputList">
-              <div v-for="(value, index) in addForm.inputList" :key="index" style="display: flex; align-items: center;">
-                <el-input v-model="addForm.inputList[index]" placeholder="请逐条输入指纹内容"></el-input>
+            <el-form-item label="指纹内容" prop="touchvalue">
+              <div v-for="(value, index) in addForm.touchvalue" :key="index" style="display: flex; align-items: center;">
+                <el-input v-model="addForm.touchvalue[index]" placeholder="请逐条输入指纹内容"></el-input>
               </div>
               <div style="display: flex; justify-content: flex-start; align-items: center;">
                 <el-button @click="addInput" type="primary" icon="el-icon-plus" circle></el-button>
               </div>
             </el-form-item>
 				<el-form-item label="特征来源">
-					<el-radio-group v-model="addForm.featureAdd">
+					<el-radio-group v-model="addForm.feature">
 						<el-radio class="radio" :label=0>Code</el-radio>
 						<el-radio class="radio" :label=1>Headers</el-radio>
             <el-radio class="radio" :label=2>Cookie</el-radio>
 					</el-radio-group>
 				</el-form-item>
         <el-form-item label="指纹状态">
-					<el-radio-group v-model="addForm.stateAdd">
+					<el-radio-group v-model="addForm.state">
 						<el-radio class="radio" :label=0>锁定</el-radio>
 						<el-radio class="radio" :label=1>正常</el-radio>
 					</el-radio-group>
@@ -136,7 +136,6 @@
 <script>
 import {
   removeUser,
-  addTouch,
   edittouch,
   getTouches,
 } from '@/api/userTable'
@@ -181,18 +180,18 @@ export default {
         state: 1,
       },
       addForm: {
-        touchkeyAdd: '',
-        featureAdd: 0,
-        stateAdd: 1,
-        inputList: ['']
+        touchKey: '',
+        feature: 0,
+        state: 1,
+        touchvalue: ['']
       },
       addFormVisible: false, // 新增界面是否显示
       addFormRules: {
-        touchkeyAdd: [{ required: true, message: '请输入指纹名称', trigger: 'blur' },
+        touchKey: [{ required: true, message: '请输入指纹名称', trigger: 'blur' },
         { max: 50, message: '指纹名称长度不能超过50个字符', trigger: 'blur' }],
-        inputList: [{ required: true, validator: this.checkInputListLength, trigger: 'blur' }],
-        featureAdd: [{ required: true, message: '请选择指纹特征', trigger: 'change' }],
-        stateAdd: [{ required: true, message: '请选择是否锁定', trigger: 'blur' }]
+        touchvalue: [{ required: true, validator: this.checkInputListLength, trigger: 'blur' }],
+        feature: [{ required: true, message: '请选择指纹特征', trigger: 'change' }],
+        state: [{ required: true, message: '请选择是否锁定', trigger: 'blur' }]
       }
     }
   },
@@ -286,7 +285,7 @@ export default {
       this.getRes(this.filters.key,this.currentPage);
     },
     addInput() {
-      this.addForm.inputList.push('')
+      this.addForm.touchvalue.push('')
     },
     addInputForEdit() {
       this.editForm.touchvalue.push('')
@@ -348,10 +347,10 @@ export default {
     // 显示新增界面
     handleAdd() {
       this.addForm = {
-        featureAdd: 0,
-        touchkeyAdd: '',
-        inputList: [''],
-        stateAdd: 1
+        feature: 0,
+        touchkey: '',
+        touchvalue: [''],
+        state: 1
       }
       this.dialogStatus = 'create'
       this.dialogFormVisibleAdd = true
@@ -368,7 +367,7 @@ export default {
             .then(() => {
               const para = Object.assign({}, this.editForm)
               // console.log(para)
-              edittouch(JSON.stringify(para)).then(res => {
+              edittouch(JSON.stringify(para), "update").then(res => {
                   this.$message({
                   message: '编辑成功',
                   type: 'success'
@@ -393,7 +392,7 @@ export default {
           this.$confirm('确认提交吗?', '提示', {})
             .then(() => {
               const para = Object.assign({}, this.addForm)
-              addTouch(JSON.stringify(para)).then(res => {
+              edittouch(JSON.stringify(para), "insert").then(res => {
                   this.$message({
                   message: '提交成功',
                   type: 'success'

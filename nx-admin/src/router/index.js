@@ -385,7 +385,48 @@ export const constantRouterMap = [
       }
     ]
   },
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/scanres',
+  //   meta: { title: 'table', icon: 'table' },
+  //   children: [
+  //     {
+  //       path: 'scanres',
+  //       name: 'scanres',
+  //       component: () => import('@/views/table/scanres'),
+  //       meta: { title: '扫描结果', icon: 'table' }
+  //     }
+  //   ]
+  // },
 
+  {
+    path: '/',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '/table/scanres',
+      name: '扫描结果',
+      component: () => import('@/views/table/scanres'),
+      meta: { title: '扫描结果', icon: 'tab' }
+    }]
+  },
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/complex-table',
+  //   name: 'table',
+  //   meta: {
+  //     title: 'Table',
+  //     icon: 'table'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'complex-table',
+  //       name: '指纹数据库',
+  //       component: () => import('@/views/table/complex-table'),
+  //       meta: { title: 'FingerprintDatabase' }
+  //     },
   // 滚动定位
   // {
   //   path: '/better-scroll',
