@@ -543,15 +543,14 @@ export const constantRouterMap = [
         path: 'complex-table',
         name: '指纹数据库',
         component: () => import('@/views/table/complex-table'),
-        meta: { title: 'FingerprintDatabase' }
+        meta: { title: '指纹数据库' }
       },
       {
-        path: 'TreeTable',
-        name: 'TreeTable',
-        component: () => import('@/views/table/tree-table/index'),
-        meta: { title: 'treeTable' }
+        path: 'pocs',
+        name: '漏洞数据库',
+        component: () => import('@/views/table/pocs'),
+        meta: { title: '漏洞数据库' }
       }
-
     ]
   },
   //

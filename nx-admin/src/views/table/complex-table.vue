@@ -274,9 +274,6 @@ export default {
     formatValue: function(row, column){
       return row.touchvalue.join('|&|')
     },
-    formatSex: function(row, column) {
-      return row.sex === 1 ? '男' : row.sex === 0 ? '女' : '未知'
-    },
     cancelAdd(){
       this.dialogFormVisibleAdd = false;
     },

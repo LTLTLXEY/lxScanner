@@ -21,9 +21,10 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="150">
+                            <el-table-column width="220">
                                 <template slot-scope="scope">
-                                    <el-button size="small" type="normal" @click="handleDetial(scope.row.TID)">查看</el-button>
+                                    <el-button size="small" type="normal" @click="handleDetial(scope.row.TID)">指纹</el-button>
+                                    <el-button size="small" type="normal" @click="handleDetial(scope.row.TID)">漏洞</el-button>
                                     <el-button size="small" type="danger" @click="handleDel(scope.row.TID)">删除</el-button>
                                 </template>
                             </el-table-column>
